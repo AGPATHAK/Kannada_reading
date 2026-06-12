@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalyana Kannada - Interactive Learning App</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Ambient background glow elements -->
+  <div class="glow-bg glow-bg-1"></div>
+  <div class="glow-bg glow-bg-2"></div>
+
+  <div class="app-container">
+    <!-- Sidebar / Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <span class="brand-flag">💛❤️</span>
+        <div class="brand-text">
+          <h1>ಕನ್ನಡ ಕಲ್ಯಾಣ</h1>
+          <p>Kalyana Kannada</p>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-view="dashboard">
+          <i data-lucide="layout-dashboard"></i>
+          <span>Dashboard</span>
+        </button>
+        <button class="nav-item" data-view="stories">
+          <i data-lucide="book-open"></i>
+          <span>All Stories</span>
+        </button>
+        <button class="nav-item" data-view="quizzes">
+          <i data-lucide="award"></i>
+          <span>Practice & Quizzes</span>
+        </button>
+        <button class="nav-item" data-view="conversation">
+          <i data-lucide="message-square-code"></i>
+          <span>Conversation Sim</span>
+        </button>
+        <button class="nav-item" data-view="grammar">
+          <i data-lucide="book-marked"></i>
+          <span>Grammar Guide</span>
+        </button>
+        <button class="nav-item" data-view="achievements">
+          <i data-lucide="trophy"></i>
+          <span>Achievements</span>
+        </button>
+      </nav>
+
+      <div class="user-stats-card">
+        <div class="stat-row">
+          <span class="stat-label"><i data-lucide="zap" class="streak-icon"></i> Streak</span>
+          <span class="stat-value" id="user-streak">1 Day</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label"><i data-lucide="star" class="xp-icon"></i> Total XP</span>
+          <span class="stat-value" id="user-xp">0 XP</span>
+        </div>
+        <div class="progress-bar-container">
+          <div class="progress-bar" id="xp-progress" style="width: 0%"></div>
+        </div>
+        <span class="level-label" id="user-level">Level 1 (Novice)</span>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Top header bar -->
+      <header class="top-bar">
+        <div class="top-title">
+          <h2 id="current-view-title">Dashboard</h2>
+        </div>
+        <div class="header-actions">
+          <button id="toggle-theme-btn" class="icon-btn" title="Toggle Light/Dark Mode">
+            <i data-lucide="moon"></i>
+          </button>
+          <div class="user-profile">
+            <span class="profile-avatar">👨‍🎓</span>
+            <span class="profile-name">Kannada Learner</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- View Sections -->
+      <div class="view-content">
+        <!-- 1. DASHBOARD VIEW -->
+        <section id="view-dashboard" class="view-pane active">
+          <div class="welcome-banner">
+            <div class="welcome-text">
+              <h2>ನಮಸ್ಕಾರ! (Namaskara!)</h2>
+              <p>Welcome to your Kannada learning journey. Master spoken & written Kannada through 32 beautiful stories based on primary school books.</p>
+            </div>
+            <div class="quick-stats">
+              <div class="quick-stat-box">
+                <h4 id="stat-completed-stories">0/32</h4>
+                <p>Stories Completed</p>
+              </div>
+              <div class="quick-stat-box">
+                <h4 id="stat-vocab-count">0</h4>
+                <p>Words Learned</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-header">
+            <h3>Recent Stories</h3>
+            <button class="text-link" id="view-all-stories-link">View All</button>
+          </div>
+          <div class="stories-grid-container" id="recent-stories-grid">
+            <!-- Dynamically populated -->
+          </div>
+        </section>
+
+        <!-- 2. ALL STORIES GRID VIEW -->
+        <section id="view-stories" class="view-pane">
+          <div class="filter-bar">
+            <button class="filter-btn active" data-category="all">All</button>
+            <button class="filter-btn" data-category="Animals">Animals 🐾</button>
+            <button class="filter-btn" data-category="Family & Friends">Family & Friends 👨‍👩‍👧</button>
+            <button class="filter-btn" data-category="School & Home">School & Home 🏫</button>
+            <button class="filter-btn" data-category="Activities">Activities ⚽</button>
+          </div>
+          <div class="stories-grid-container" id="all-stories-grid">
+            <!-- Dynamically populated -->
+          </div>
+        </section>
+
+        <!-- 3. SINGLE STORY READER VIEW -->
+        <section id="view-story-reader" class="view-pane">
+          <div class="reader-header">
+            <button class="back-btn" id="reader-back-btn">
+              <i data-lucide="arrow-left"></i> Back to Stories
+            </button>
+            <div class="reader-meta">
+              <span class="badge" id="reader-category">Animals</span>
+              <span id="reader-progress-text">Story 1 of 32</span>
+            </div>
+          </div>
+
+          <div class="reader-card">
+            <h2 id="reader-title">The Dog and the Biscuits</h2>
+            
+            <div class="reader-controls">
+              <label class="control-switch">
+                <input type="checkbox" id="toggle-transliteration" checked>
+                <span class="slider"></span>
+                Show Transliteration
+              </label>
+              <label class="control-switch">
+                <input type="checkbox" id="toggle-english" checked>
+                <span class="slider"></span>
+                Show English
+              </label>
+            </div>
+
+            <!-- Line-by-line Story Section -->
+            <div class="story-lines-container" id="story-lines">
+              <!-- Dynamically populated with word-clickable nodes -->
+            </div>
+
+            <div class="reader-actions-footer">
+              <button class="btn btn-secondary" id="reader-prev-btn"><i data-lucide="chevron-left"></i> Previous</button>
+              <button class="btn btn-primary animate-pulse" id="reader-quiz-btn">Practice This Story <i data-lucide="sparkles"></i></button>
+              <button class="btn btn-secondary" id="reader-next-btn">Next <i data-lucide="chevron-right"></i></button>
+            </div>
+          </div>
+
+          <!-- Vocabulary Dictionary Sidebar -->
+          <div class="dictionary-pane" id="dictionary-pane">
+            <div class="dict-header">
+              <h4>Vocabulary Helper</h4>
+              <button class="close-dict" id="close-dict-btn">&times;</button>
+            </div>
+            <div class="dict-content" id="dict-content">
+              <p class="dict-placeholder">Click on any bold word in the story to see its meaning, phonetic spelling, and grammar detail.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- 4. QUIZ / PRACTICE DECK -->
+        <section id="view-quizzes" class="view-pane">
+          <div class="quiz-container">
+            
+            <!-- Selection Landing Screen -->
+            <div class="quiz-selection-menu" id="quiz-selection-menu">
+              <h3>Choose Practice Mode</h3>
+              <p style="color:var(--text-secondary); margin-bottom:1.5rem;">Sharpen your Kannada skills through interactive exercises.</p>
+              
+              <div class="quiz-menu-grid">
+                <div class="menu-option-card">
+                  <div class="menu-icon">✍️</div>
+                  <h4>Story Quizzes</h4>
+                  <p>Test your reading comprehension and grammar after reading stories.</p>
+                  <span class="unlock-hint">To start, browse any story card in the Library and click "Practice This Story"</span>
+                </div>
+                
+                <div class="menu-option-card locked" id="vocab-flashcards-option">
+                  <div class="menu-icon">🎴</div>
+                  <h4>Vocabulary Flashcards</h4>
+                  <p>Study active recall cards for all Kannada vocabulary words you've learned.</p>
+                  <span class="unlock-hint" id="flashcard-unlock-status">🔒 Complete 5 stories to unlock</span>
+                  <button class="btn btn-primary hidden" id="launch-flashcards-btn">Start Flashcards <i data-lucide="play"></i></button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Standard Story Quiz Interface -->
+            <div class="quiz-card hidden" id="quiz-card">
+              <div class="quiz-progress">
+                <span id="quiz-question-number">Question 1 of 3</span>
+                <div class="progress-bar-container">
+                  <div class="progress-bar" id="quiz-progress-bar" style="width: 33%"></div>
+                </div>
+              </div>
+
+              <!-- Quiz type renders here -->
+              <div id="quiz-question-body">
+                <!-- Dynamically populated -->
+              </div>
+
+              <div class="quiz-footer">
+                <button class="btn btn-secondary" id="quiz-quit-btn">Quit Quiz</button>
+                <button class="btn btn-primary" id="quiz-submit-btn" disabled>Check Answer</button>
+              </div>
+            </div>
+
+            <!-- Standard Story Quiz Results -->
+            <div class="quiz-results-card hidden" id="quiz-results-card">
+              <div class="results-badge">🏆</div>
+              <h2>Quiz Completed!</h2>
+              <p>Awesome work. You have mastered this exercise.</p>
+              <div class="results-stats">
+                <div class="r-stat">
+                  <span class="r-val" id="results-score">3/3</span>
+                  <span class="r-lbl">Correct Answers</span>
+                </div>
+                <div class="r-stat">
+                  <span class="r-val" id="results-xp">+15 XP</span>
+                  <span class="r-lbl">XP Earned</span>
+                </div>
+              </div>
+              <button class="btn btn-primary" id="results-finish-btn">Return to Dashboard</button>
+            </div>
+
+            <!-- Vocabulary Flashcard Player Interface -->
+            <div class="flashcard-card hidden" id="flashcard-card">
+              <div class="reader-header" style="margin-bottom:1rem;">
+                <button class="back-btn" id="flashcard-quit-btn">
+                  <i data-lucide="arrow-left"></i> Exit Practice
+                </button>
+                <span id="flashcard-progress-text">Card 1 of 10</span>
+              </div>
+              
+              <div class="flashcard-wrapper">
+                <div class="flashcard" id="active-flashcard">
+                  <div class="flashcard-face flashcard-front">
+                    <span class="card-side-tag">KANNADA SCRIPT</span>
+                    <h2 class="card-word-kannada" id="fc-front-word">ಮೊಲ</h2>
+                    <p class="card-tap-tip">Tap to show translation ↺</p>
+                  </div>
+                  <div class="flashcard-face flashcard-back">
+                    <span class="card-side-tag">MEANING & TRANSILITERATION</span>
+                    <h3 class="card-word-translit" id="fc-back-translit">moLa</h3>
+                    <span class="badge" id="fc-back-pos">Noun</span>
+                    <h2 class="card-word-meaning" id="fc-back-meaning">Rabbit</h2>
+                    <p class="card-tap-tip">Tap card to flip back ↺</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="flashcard-footer-actions">
+                <button class="btn btn-secondary" id="fc-btn-again">Study Again <i data-lucide="refresh-cw"></i></button>
+                <button class="btn btn-primary" id="fc-btn-got-it">Got It! ✅</button>
+              </div>
+            </div>
+
+            <!-- Flashcard Complete screen -->
+            <div class="quiz-results-card hidden" id="flashcard-results-card">
+              <div class="results-badge">🎉</div>
+              <h2>Vocab Review Finished!</h2>
+              <p>You have revised your active vocabulary words successfully.</p>
+              <div class="results-stats">
+                <div class="r-stat">
+                  <span class="r-val" id="fc-results-count">10</span>
+                  <span class="r-lbl">Words Practiced</span>
+                </div>
+                <div class="r-stat">
+                  <span class="r-val" id="fc-results-xp">+10 XP</span>
+                  <span class="r-lbl">XP Earned</span>
+                </div>
+              </div>
+              <button class="btn btn-primary" id="fc-results-finish-btn">Return to Dashboard</button>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- 5. DIALOGUE CONVERSATION SIMULATOR -->
+        <section id="view-conversation" class="view-pane">
+          <!-- Selection Screen -->
+          <div id="chat-selection-screen" class="chat-selection-grid">
+            <div class="selection-header-text">
+              <h3>Choose a Conversation Partner</h3>
+              <p>Practice Kannada speaking scenarios based on vocabulary from the stories.</p>
+            </div>
+            <div class="partner-card" data-partner="priya">
+              <div class="partner-avatar">👩</div>
+              <h4>Priya</h4>
+              <p>Daily social — greetings, introductions, neighbourhood small talk</p>
+              <button class="btn btn-primary">Chat with Priya</button>
+            </div>
+            <div class="partner-card" data-partner="ravi">
+              <div class="partner-avatar">👨‍💼</div>
+              <h4>Ravi</h4>
+              <p>Work & office — Bangalore tech company, colleagues, lunch</p>
+              <button class="btn btn-primary">Chat with Ravi</button>
+            </div>
+            <div class="partner-card" data-partner="suresh">
+              <div class="partner-avatar">🛺</div>
+              <h4>Suresh</h4>
+              <p>Practical Kannada — auto-rickshaw, directions, shopping</p>
+              <button class="btn btn-primary">Chat with Suresh</button>
+            </div>
+          </div>
+
+          <!-- Chat Screen -->
+          <div id="chat-interface-screen" class="chat-interface hidden">
+            <div class="chat-header">
+              <button class="back-btn" id="chat-back-btn"><i data-lucide="arrow-left"></i> Exit</button>
+              <div class="chat-partner-info">
+                <span class="chat-avatar" id="chat-header-avatar">👩</span>
+                <div>
+                  <h4 id="chat-header-name">Megha</h4>
+                  <span class="chat-status">Online</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Scrollable chat thread -->
+            <div class="chat-thread" id="chat-thread">
+              <!-- Message bubbles dynamically populated -->
+            </div>
+
+            <!-- Dialogue Selection choices -->
+            <div class="chat-input-area">
+              <p class="input-hint">Select the best response in Kannada:</p>
+              <div class="chat-choices-container" id="chat-choices">
+                <!-- Dynamically populated choice buttons -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 6. GRAMMAR REFERENCE VIEW -->
+        <section id="view-grammar" class="view-pane">
+          <div class="grammar-intro-header">
+            <p>A practical reference. Click any section to expand. Grammar notes also appear in the Vocabulary Helper when you click a word in a story.</p>
+          </div>
+          <div class="grammar-accordion">
+
+            <div class="grammar-section">
+              <button class="grammar-section-header">
+                <span class="grammar-section-icon">🔤</span>
+                <span>Word Order — Subject · Object · Verb (SOV)</span>
+                <i data-lucide="chevron-down" class="accordion-icon"></i>
+              </button>
+              <div class="grammar-section-body">
+                <p class="grammar-body-text">The most important rule: <strong>the verb always comes last</strong>. English says "I ate an apple." Kannada says "I apple ate." Every modifier and object stacks before the verb.</p>
+                <div class="grammar-example-row">
+                  <div class="grammar-example">
+                    <span class="example-label">English (SVO)</span>
+                    <span class="example-sentence">The dog <span class="highlight-verb">ate</span> biscuits.</span>
+                  </div>
+                  <div class="example-arrow">→</div>
+                  <div class="grammar-example">
+                    <span class="example-label">Kannada (SOV)</span>
+                    <span class="example-sentence">ನಾಯಿ biscuits <span class="highlight-verb">ತಿಂದಿತು</span>.</span>
+                    <span class="example-translit">naayi biscuits <em>thindhithu</em>.</span>
+                  </div>
+                </div>
+                <div class="grammar-note-box">
+                  <strong>Tip:</strong> When constructing a sentence, always finish with the verb. Any time clauses, relative clauses, and adjectives all precede the noun or verb they modify.
+                </div>
+              </div>
+            </div>
+
+            <div class="grammar-section">
+              <button class="grammar-section-header">
+                <span class="grammar-section-icon">👤</span>
+                <span>Pronouns</span>
+                <i data-lucide="chevron-down" class="accordion-icon"></i>
+              </button>
+              <div class="grammar-section-body">
+                <p class="grammar-body-text">Kannada uses a 3-gender system for the third person (masculine / feminine / neuter). The 2nd person has a formal/informal split.</p>
+                <table class="grammar-table">
+                  <thead><tr><th>Person</th><th>Singular</th><th>Translit.</th><th>Plural</th><th>Translit.</th></tr></thead>
+                  <tbody>
+                    <tr><td>1st</td><td>ನಾನು</td><td>naanu</td><td>ನಾವು</td><td>naavu</td></tr>
+                    <tr><td>2nd informal</td><td>ನೀನು</td><td>neenu</td><td>ನೀವು</td><td>neevu</td></tr>
+                    <tr><td>2nd formal</td><td>ನೀವು</td><td>neevu</td><td>ನೀವು</td><td>neevu</td></tr>
+                    <tr><td>3rd masc.</td><td>ಅವನು</td><td>avanu</td><td>ಅವರು</td><td>avaru</td></tr>
+                    <tr><td>3rd fem.</td><td>ಅವಳು</td><td>avaLu</td><td>ಅವರು</td><td>avaru</td></tr>
+                    <tr><td>3rd neuter</td><td>ಅದು</td><td>adhu</td><td>ಅವು</td><td>avu</td></tr>
+                  </tbody>
+                </table>
+                <div class="grammar-note-box">
+                  <strong>Use ನೀವು (neevu)</strong> with elders, strangers, and in professional settings. <strong>ನೀನು (neenu)</strong> is for close friends and children. When in doubt, default to ನೀವು.
+                </div>
+              </div>
+            </div>
+
+            <div class="grammar-section">
+              <button class="grammar-section-header">
+                <span class="grammar-section-icon">⚙️</span>
+                <span>Verb Conjugation — Past Tense</span>
+                <i data-lucide="chevron-down" class="accordion-icon"></i>
+              </button>
+              <div class="grammar-section-body">
+                <p class="grammar-body-text">Verbs agree with the subject in gender, number, and person. The root stays fixed; the suffix changes. Below: <em>ಮಾಡು (maaDu)</em> — "to do".</p>
+                <table class="grammar-table">
+                  <thead><tr><th>Subject</th><th>Verb</th><th>Translit.</th><th>Meaning</th></tr></thead>
+                  <tbody>
+                    <tr><td>ನಾನು (I)</td><td>ಮಾಡಿದೆ</td><td>maaDidhe</td><td>I did</td></tr>
+                    <tr><td>ನಾವು (We)</td><td>ಮಾಡಿದೆವು</td><td>maaDidhevu</td><td>We did</td></tr>
+                    <tr><td>ಅವನು (He)</td><td>ಮಾಡಿದನು</td><td>maaDidanu</td><td>He did</td></tr>
+                    <tr><td>ಅವಳು (She)</td><td>ಮಾಡಿದಳು</td><td>maaDidaLu</td><td>She did</td></tr>
+                    <tr><td>ಅದು (It / neuter)</td><td>ಮಾಡಿತು</td><td>maaDitu</td><td>It did</td></tr>
+                    <tr><td>ಅವರು (They / you formal)</td><td>ಮಾಡಿದರು</td><td>maaDidaru</td><td>They did</td></tr>
+                  </tbody>
+                </table>
+                <div class="grammar-note-box">
+                  <strong>Pattern:</strong> Root + <em>-idi-</em> (past marker) + person/gender suffix. The neuter suffix <em>-itu/-ithu</em> is why verbs in the animal stories all end that way — animals take neuter agreement.
+                </div>
+              </div>
+            </div>
+
+            <div class="grammar-section">
+              <button class="grammar-section-header">
+                <span class="grammar-section-icon">🔩</span>
+                <span>Case Markers (Vibhakti)</span>
+                <i data-lucide="chevron-down" class="accordion-icon"></i>
+              </button>
+              <div class="grammar-section-body">
+                <p class="grammar-body-text">Instead of prepositions, Kannada adds suffixes directly to nouns to show their role. The noun root sometimes changes slightly before the suffix.</p>
+                <table class="grammar-table">
+                  <thead><tr><th>Case</th><th>Suffix</th><th>Role</th><th>Example</th><th>Meaning</th></tr></thead>
+                  <tbody>
+                    <tr><td>Nominative</td><td>(none)</td><td>Subject</td><td>ನಾಯಿ ಓಡಿತು</td><td>The dog ran</td></tr>
+                    <tr><td>Accusative</td><td>-ಅನ್ನು (-annu)</td><td>Direct object</td><td>ನಾಯಿಯನ್ನು ನೋಡಿದೆ</td><td>I saw the dog</td></tr>
+                    <tr><td>Dative</td><td>-ಗೆ / -ಕ್ಕೆ (-ge / -kke)</td><td>To / For</td><td>ಅವಳಿಗೆ ಕೊಟ್ಟೆ</td><td>I gave (to) her</td></tr>
+                    <tr><td>Genitive</td><td>-ಅ / -ಇನ (-a / -ina)</td><td>Of / possession</td><td>ನನ್ನ ಮನೆ</td><td>My house</td></tr>
+                    <tr><td>Locative</td><td>-ಅಲ್ಲಿ (-alli)</td><td>In / at</td><td>ಮನೆಯಲ್ಲಿ</td><td>In the house</td></tr>
+                    <tr><td>Ablative</td><td>-ಇಂದ (-inda)</td><td>From / by means of</td><td>ಊರಿಂದ ಬಂದೆ</td><td>I came from town</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="grammar-section">
+              <button class="grammar-section-header">
+                <span class="grammar-section-icon">🚫</span>
+                <span>Negation</span>
+                <i data-lucide="chevron-down" class="accordion-icon"></i>
+              </button>
+              <div class="grammar-section-body">
+                <table class="grammar-table">
+                  <thead><tr><th>Pattern</th><th>Example</th><th>Translit.</th><th>Meaning</th></tr></thead>
+                  <tbody>
+                    <tr><td>"X is not Y"</td><td>ಅವನು ವಿದ್ಯಾರ್ಥಿ <strong>ಅಲ್ಲ</strong></td><td>avanu vidyarthi <em>alla</em></td><td>He is not a student</td></tr>
+                    <tr><td>"There is no X"</td><td>ಹಾಲು <strong>ಇಲ್ಲ</strong></td><td>haalu <em>illa</em></td><td>There is no milk</td></tr>
+                    <tr><td>"Did not"</td><td>ನಾನು ತಿನ್ನ<strong>ಲಿಲ್ಲ</strong></td><td>naanu tinnalilla</td><td>I did not eat</td></tr>
+                    <tr><td>"Don't want"</td><td>ನನಗೆ <strong>ಬೇಡ</strong></td><td>nanage <em>beDa</em></td><td>I don't want it</td></tr>
+                  </tbody>
+                </table>
+                <div class="grammar-note-box">
+                  <strong>ಅಲ್ಲ (alla)</strong> negates identity or description — "X is not Y." <strong>ಇಲ್ಲ (illa)</strong> negates existence or a completed action — "X doesn't exist / didn't happen." These are not interchangeable.
+                </div>
+              </div>
+            </div>
+
+            <div class="grammar-section">
+              <button class="grammar-section-header">
+                <span class="grammar-section-icon">💡</span>
+                <span>Key Sentence Patterns</span>
+                <i data-lucide="chevron-down" class="accordion-icon"></i>
+              </button>
+              <div class="grammar-section-body">
+                <p class="grammar-body-text">These high-frequency patterns will carry you through most everyday situations.</p>
+                <table class="grammar-table">
+                  <thead><tr><th>Meaning</th><th>Template</th><th>Example</th></tr></thead>
+                  <tbody>
+                    <tr><td>I like ___</td><td>ನನಗೆ ___ ಇಷ್ಟ</td><td>ನನಗೆ ಕಾಫಿ ಇಷ್ಟ — I like coffee</td></tr>
+                    <tr><td>I want ___</td><td>ನನಗೆ ___ ಬೇಕು</td><td>ನನಗೆ ನೀರು ಬೇಕು — I want water</td></tr>
+                    <tr><td>I don't want ___</td><td>ನನಗೆ ___ ಬೇಡ</td><td>ನನಗೆ ಸಕ್ಕರೆ ಬೇಡ — I don't want sugar</td></tr>
+                    <tr><td>Where is ___?</td><td>___ ಎಲ್ಲಿದೆ?</td><td>ಟಾಯ್ಲೆಟ್ ಎಲ್ಲಿದೆ? — Where is the toilet?</td></tr>
+                    <tr><td>How much?</td><td>ಇದು ಎಷ್ಟು?</td><td>ಇದು ಎಷ್ಟು? — How much is this?</td></tr>
+                    <tr><td>I don't know Kannada well</td><td>ನನಗೆ ಕನ್ನಡ ಸರಿಯಾಗಿ ಬರುವುದಿಲ್ಲ</td><td>nanage kannaDa sariyaagi baruvudilla</td></tr>
+                    <tr><td>Please speak slowly</td><td>ನಿಧಾನವಾಗಿ ಮಾತಾಡಿ</td><td>nidhaanavaagi maataaDi</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="grammar-section">
+              <button class="grammar-section-header">
+                <span class="grammar-section-icon">🔢</span>
+                <span>Numbers 1–20</span>
+                <i data-lucide="chevron-down" class="accordion-icon"></i>
+              </button>
+              <div class="grammar-section-body">
+                <div class="numbers-grid">
+                  <div class="number-item"><span class="num-digit">1</span><span class="num-kannada">ಒಂದು</span><span class="num-translit">ondhu</span></div>
+                  <div class="number-item"><span class="num-digit">2</span><span class="num-kannada">ಎರಡು</span><span class="num-translit">eraDu</span></div>
+                  <div class="number-item"><span class="num-digit">3</span><span class="num-kannada">ಮೂರು</span><span class="num-translit">mooru</span></div>
+                  <div class="number-item"><span class="num-digit">4</span><span class="num-kannada">ನಾಲ್ಕು</span><span class="num-translit">naalku</span></div>
+                  <div class="number-item"><span class="num-digit">5</span><span class="num-kannada">ಐದು</span><span class="num-translit">aidu</span></div>
+                  <div class="number-item"><span class="num-digit">6</span><span class="num-kannada">ಆರು</span><span class="num-translit">aaru</span></div>
+                  <div class="number-item"><span class="num-digit">7</span><span class="num-kannada">ಏಳು</span><span class="num-translit">eLu</span></div>
+                  <div class="number-item"><span class="num-digit">8</span><span class="num-kannada">ಎಂಟು</span><span class="num-translit">enTu</span></div>
+                  <div class="number-item"><span class="num-digit">9</span><span class="num-kannada">ಒಂಭತ್ತು</span><span class="num-translit">ommbhattu</span></div>
+                  <div class="number-item"><span class="num-digit">10</span><span class="num-kannada">ಹತ್ತು</span><span class="num-translit">hattu</span></div>
+                  <div class="number-item"><span class="num-digit">11</span><span class="num-kannada">ಹನ್ನೊಂದು</span><span class="num-translit">hannondhu</span></div>
+                  <div class="number-item"><span class="num-digit">12</span><span class="num-kannada">ಹನ್ನೆರಡು</span><span class="num-translit">hanneraDu</span></div>
+                  <div class="number-item"><span class="num-digit">15</span><span class="num-kannada">ಹದಿನೈದು</span><span class="num-translit">hadinaidu</span></div>
+                  <div class="number-item"><span class="num-digit">20</span><span class="num-kannada">ಇಪ್ಪತ್ತು</span><span class="num-translit">ippattu</span></div>
+                  <div class="number-item"><span class="num-digit">50</span><span class="num-kannada">ಐವತ್ತು</span><span class="num-translit">aivattu</span></div>
+                  <div class="number-item"><span class="num-digit">100</span><span class="num-kannada">ನೂರು</span><span class="num-translit">nooru</span></div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- 7. ACHIEVEMENTS VIEW -->
+        <section id="view-achievements" class="view-pane">
+          <div class="achievements-summary">
+            <div class="summary-box">
+              <h3 id="ach-level-badge">Novice</h3>
+              <p>Current Title</p>
+            </div>
+            <div class="summary-box">
+              <h3 id="ach-badges-count">0/6</h3>
+              <p>Badges Unlocked</p>
+            </div>
+          </div>
+
+          <h3 class="section-title">Your Badge Showcase</h3>
+          <div class="badges-grid" id="badges-grid">
+            <div class="badge-card locked" id="badge-first-step">
+              <div class="badge-icon">🎯</div>
+              <h4>First Steps</h4>
+              <p>Read your very first Kannada story.</p>
+              <span class="badge-status">Locked</span>
+            </div>
+            <div class="badge-card locked" id="badge-animal-whisperer">
+              <div class="badge-icon">🐾</div>
+              <h4>Animal Whisperer</h4>
+              <p>Read 5 stories in the Animals category.</p>
+              <span class="badge-status">Locked</span>
+            </div>
+            <div class="badge-card locked" id="badge-quiz-wizard">
+              <div class="badge-icon">⚡</div>
+              <h4>Quiz Wizard</h4>
+              <p>Score 100% on 3 different story quizzes.</p>
+              <span class="badge-status">Locked</span>
+            </div>
+            <div class="badge-card locked" id="badge-chatterbox">
+              <div class="badge-icon">💬</div>
+              <h4>Chatterbox</h4>
+              <p>Complete 2 dialogue simulator sessions.</p>
+              <span class="badge-status">Locked</span>
+            </div>
+            <div class="badge-card locked" id="badge-sentence-architect">
+              <div class="badge-icon">🏗️</div>
+              <h4>Sentence Architect</h4>
+              <p>Successfully solve 5 scrambled sentence puzzles.</p>
+              <span class="badge-status">Locked</span>
+            </div>
+            <div class="badge-card locked" id="badge-kannada-ruler">
+              <div class="badge-icon">👑</div>
+              <h4>Kannada Ruler</h4>
+              <p>Unlock all 32 stories in the course.</p>
+              <span class="badge-status">Locked</span>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
